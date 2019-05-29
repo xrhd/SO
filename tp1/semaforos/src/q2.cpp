@@ -1,3 +1,5 @@
+//authors: rhd asx//
+
 #include <iostream>
 #include <vector>
 #include <semaphore.h>
@@ -6,6 +8,8 @@
 
 using namespace std;
 
+
+#define SLEEP 2
 sem_t mutex;
 sem_t sem_clientes;
 sem_t sem_barbeiros;
@@ -25,7 +29,7 @@ void * barbeiro (void *arg) {
     int i =  *((int*) arg);
     
     while (numClientes) {
-        cout << "Barbeiro " << i << " esta esperando um cliente" << endl; 
+        cout<< "[zZ][Barbeiro] " << i << " esta esperando um cliente" << endl; 
         sem_wait(&sem_clientes);
         
         --numClientes;
@@ -33,11 +37,11 @@ void * barbeiro (void *arg) {
         
         out = (out + 1) % maxClientes;
         
-        cout<< "Barbeiro " << i << " esta cortando cabelo de um cliente." << endl;
+        cout<< "[..][Barbeiro] " << i << " esta cortando cabelo de um cliente." << endl;
         
-        sleep(5);
+        sleep(SLEEP);
         
-        cout<< "Barbeiro " << i << " cortou o cabelo de um cliente." << endl;
+        cout<< "[!!][Barbeiro] " << i << " cortou o cabelo de um cliente." << endl;
         sem_post(&sem_barbeiros);
     }
 }
@@ -49,21 +53,22 @@ void * cliente (void *arg) {
         ++buffer[in];
         in = (in + 1) % maxClientes;
         
-        cout<< "Cliente " << i << " esta na fila." << endl;
+        cout<< "[:|][Cliente] " << i << " esta na fila." << endl;
         
         sem_post(&sem_clientes);
         sem_wait(&sem_barbeiros);
         
-        cout << "Cliente "<< i <<" foi embora, pois acabou de cortar o cabelo." << endl;
+        cout << "[:(][Cliente] "<< i <<" foi embora, pois acabou de cortar o cabelo." << endl;
     } else {
         --numClientes;
         
-        cout << "Cliente " << i << " foi embora, pois a barbearia estava lotada." << endl;
+        cout << "[:)][Cliente] " << i << " foi embora, pois a barbearia estava lotada." << endl;
     }
 }
 
+// Driver //
 int main () {
-    cout << "Informe o numero de barbeiros, cadeiras de espera e clientes: ";
+    cout << "[INFORME]: numero de barbeiros, cadeiras de espera e clientes: ";
     cin >> numBarbeiros >> maxClientes >> numClientes;
     cout << endl;
     

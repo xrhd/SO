@@ -8,7 +8,7 @@
 #include <stdlib.h>
 
 #define NCONTAS 2
-#define SLEEP 0.5
+#define SLEEP 2
 
 using namespace std;
 
@@ -30,7 +30,7 @@ void * deposito (void *t) {
 	tData * data = (tData *) t;
 	int a = conta[data->index];
 
-	cout << "Thread Escritora " << data->id << " - Valor na conta "
+	cout << "[ ]Thread Escritora " << data->id << " - Valor na conta "
 		<< data->index << " antes do deposito: " << conta[data->index] << endl;
 
 	sleep(SLEEP);
@@ -38,7 +38,7 @@ void * deposito (void *t) {
 	a += data->valor;
 	conta[data->index] = a;
     
-	cout << "Thread Escritora " << data->id << " - Valor na conta "
+	cout << "[+]Thread Escritora " << data->id << " - Valor na conta "
 		<< data->index << " depois do deposito: " << conta[data->index] << endl;
 
 	--nEscritoras;
@@ -52,7 +52,7 @@ void * saque (void *t) {
 	tData * data = (tData *) t;
 	int a = conta[data->index];
 
-	cout << "Thread Escritora " << data->id << " - Valor na conta "
+	cout << "[ ]Thread Escritora " << data->id << " - Valor na conta "
 		<< data->index << " antes do saque: " << conta[data->index] << endl;
 
 	sleep(SLEEP);
@@ -60,7 +60,7 @@ void * saque (void *t) {
 	a -= data->valor;
 	conta[data->index] = a;
 
-	cout << "Thread Escritora " << data->id << " - Valor na conta "
+	cout << "[-]Thread Escritora " << data->id << " - Valor na conta "
 		<< data->index << " depois do saque: " << conta[data->index] << endl;
 
 	--nEscritoras;
@@ -73,7 +73,7 @@ void * consulta (void *t) {
 
 	tData * data = (tData *) t;
 	
-	cout << "Thread Leitora " << data->id << " - Valor na conta " << data->index
+	cout << "[?] Thread Leitora " << data->id << " - Valor na conta " << data->index
 		<< ": " << conta[data->index] << endl;
 
 	sem_post(&semaforoL);
@@ -87,7 +87,7 @@ int main () {
 	
 	int leitoras, num_deposito, num_saque;
 	
-	cout << "Insira a quantidade de deposito, saque e leituras: ";
+	cout << "[INFORME]: quantidade de deposito, saque e leituras: ";
 	cin >> num_deposito >> num_saque >> leitoras;
 
 	nEscritoras = num_deposito + num_saque;
